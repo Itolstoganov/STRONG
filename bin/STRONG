@@ -18,6 +18,7 @@ parser.add_argument("--threads", "-t", type=int, default=1, help="Number of thre
 parser.add_argument("dir", type=str, help="Output directory")
 parser.add_argument("step", nargs='?', default='all', type=str, choices={"all", "assembly", "graphextraction", "bayespaths", "evaluation", "results","desman"}, help="Pipeline step to run options: all, assembly, graphextraction, bayespaths, evaluation, results or desman, default is all")
 parser.add_argument("--config", "-c", type=str, default="", help="config.yaml to be copied to the directory (unnecessary if config.yaml is already there)")
+parser.add_argument("--cluster", type=str, default="", help="json file with snakemake cluster configs")
 parser.add_argument("--verbose", "-v", action="store_true", help="Increase verbosity level")
 parser.add_argument("--dryrun","-n", action="store_true", help="Show tasks, do not execute them")
 parser.add_argument("--unlock", "-u", action="store_true", help="Unlock the directory")
@@ -52,7 +53,8 @@ if (not exists(config_path))&(exists(args.config)):
 
 
 # base parameters used to call snakeamke
-base_params = ["snakemake", "--directory", output_dir, "--cores", str(args.threads), "--config", "LOCAL_DIR" + "=" + STRONG_DIR,"--configfile=%s"%config_path, "--latency-wait", "120","-k"]
+#base_params = ["snakemake", "--directory", output_dir, "--cores", str(args.threads), "--config", "LOCAL_DIR" + "=" + STRONG_DIR,"--configfile=%s"%config_path, "--latency-wait", "120","-k", ]
+base_params = ["snakemake", "--directory", output_dir, "--keep-going", "-j", "999999", "--cluster", "\"sbatch -A {cluster.account} -C {cluster.C} -c {cluster.cpus-per-task} -N {cluster.Nodes}  -t {cluster.runtime} -J {cluster.jobname} --mail-type={cluster.mail_type} --mail-user={cluster.mail}\"", "--cluster-config", args.cluster, "--config", "LOCAL_DIR" + "=" + STRONG_DIR,"--configfile=%s"%config_path, "--latency-wait", "120","-k", ]
 
 # parse args
 if args.verbose:
@@ -80,6 +82,7 @@ with cd(STRONG_DIR):
             with open(args.dag.replace(".png", str(call_cnt)+".png"), "bw") as f:
                 f.write(p2.communicate()[0])
         else:
+            print(" ".join(base_params + extra_params))
             subprocess.check_call(base_params + extra_params, stdout=sys.stdout, stderr=sys.stderr)
 
     # load config for conditional execution

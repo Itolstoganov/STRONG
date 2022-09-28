@@ -1,0 +1,68 @@
+{
+
+    "__default__" : 
+    {
+        "account" : "snic2021-5-572",
+        "n" : "1",
+        "partition" : "core",
+        "runtime" : "20:00:00",
+        "jobname" : "default",
+        "mail" : "ivan.tolstoganov@math.su.se",
+        "mail_type" : "FAIL"
+    },
+    "bedtools_split_cov" :
+    {
+        "n" : "16",
+    },
+
+    "bowtie_align" : 
+    {
+        "n" : "8",
+    },
+
+    "bowtie_index" : 
+    {
+        "n" : "8",
+    },
+
+    "concoct" : 
+    {
+        "n" : "20",
+    },
+
+    "merge_contigs" : 
+    {
+        "n" : "8",
+    },
+
+    "refine" : 
+    {
+        "n" : "20",
+    },
+
+    "samtools_sort" : 
+    {
+        "n" : "8",
+    },
+
+    "simplify" : 
+    {
+        "n" : "16",
+    },
+
+    "spades" : 
+    {
+        "n" : "20",
+        "Nodes" : 1,
+        "runtime" : "10:00:00",
+        "jobname" : "spades",
+        "mail" : "ivan.tolstoganov@math.su.se",
+        "mail_type" : "FAIL"
+    },
+
+    "unitig_profiles" : 
+    {
+        "n" : "8",
+    }
+}
+
