@@ -10,14 +10,14 @@ CONDA_ENVS  = "/mnt/gpfs/seb/Project/Metahood/conda_envs"
 rule inStrain_profile:
    input: bam = "profile/assembly/{sample}.sorted.bam",
           assembly = "profile/assembly.fasta",
-          mag_def = "binning/%s/mag_def_%s.tsv"%(BINNER,BINNER),
-          fna = "annotation/assembly.fna"
+#          mag_def = "binning/%s/mag_def_%s.tsv"%(BINNER,BINNER),
+#          fna = "annotation/assembly.fna"
    conda: "%s/inStrains.yaml"%CONDA_ENVS
    threads: 20
    params: 'inStrain/{sample}'
    output: 'inStrain/{sample}/output/{sample}_genome_info.tsv'
-   shell: "inStrain profile {input.bam} {input.assembly} -s {input.mag_def} -o {params} -p {threads} -g {input.fna}"
-
+#   shell: "inStrain profile {input.bam} {input.assembly} -s {input.mag_def} -o {params} -p {threads} -g {input.fna}"
+   shell: "inStrain profile {input.bam} {input.assembly} -o {params} -p {threads}"
 
 rule mags_clusters:
     input: mags = "binning/{BINNER}/list_mags.tsv",
