@@ -33,10 +33,17 @@ rule cut_contigs:
             contig_bed="profile/split.bed"
     shell:  "{SCRIPTS}/Use_orf_to_cut.py {input.fa} {input.gff} {output.contig_bed} -c {FRAGMENT_SIZE} > {output.contig}"
 
+# ---- sort .bed file to reduce memory usage  ----------------------------------------------------
+rule bedtools_sort:
+    input:   bed="profile/split.bed"
+    output:  "profile/split.sorted.bed"
+    log:     "profile/split.sorted.log"
+    shell:   "sort -k1,1 -k2,2n {input.bed} > {output} 2>{log} "
+
 # ---- use bedtool to compute coverage  ----------------------------------------------------
 rule bedtools_split_cov:
     input:   sample="profile/assembly/{sample}.sorted.bam",
-             bed="profile/split.bed"
+             bed="profile/split.sorted.bed"
     output:  "profile/split/{sample}.cov"
     log:     "profile/split/{sample}.log"
     shell:   "bedtools coverage -a {input.bed} -b {input.sample} -mean > {output} 2>{log} "
